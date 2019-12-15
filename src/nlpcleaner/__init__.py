@@ -7,14 +7,10 @@ from nltk.stem import WordNetLemmatizer
 import fasttext
 from pycountry import languages
 
-from text_cleaner import __version__
-
-__author__ = "Duccio Giovannelli"
-__copyright__ = "Duccio Giovannelli"
-__license__ = "mit"
-
+# Set nltk folder
 nltk.data.path.append(os.getcwd() + "/src/data/nltk")
-languages_model = fasttext.load_model(os.getcwd() + "/src/data/fast_text/lid.176.ftz")
+# Load languages models
+languages_model = fasttext.load_model(os.getcwd() + "/src/data/fasttext/lid.176.ftz")
 
 stop_words = {}
 stop_words['ar'] = set(stopwords.words('arabic'))
@@ -45,5 +41,45 @@ stemmer = SnowballStemmer('english')
 lemmatizer = WordNetLemmatizer()
 
 
-def clean(corpus):
-    print("clening")
+#removes all the blank line from the text file
+#returns list
+def clear_blank_lines(corpus):
+    return list(filter(str.strip,[each.rstrip() for each in corpus]))
+
+# it removes ".\n" from every element by default
+# can be used to strip by second argument
+def strip_all(corpus, x='.\n'):
+    stripped = [re.sub(r'\s+',' ',each.strip(x)) for each in corpus]
+    return "".join(stripped)
+
+# converts each character to lowercase
+def lower_all(corpus):
+    lowered = [each.lower() for each in corpus]
+    return "".join(lowered)
+
+# removes numbers detected anywhere in the data
+def remove_numbers(corpus):
+    no_numbers = [re.sub(r'[0-9]+', '',(each)) for each in corpus]
+    return "".join(no_numbers)
+
+# removes punctuations detected anywhere in the data
+def remove_symbols(corpus):
+    no_symbols = [re.sub(r'[^\w\s]','',each) for each in corpus]
+    return "".join(no_symbols)
+
+# it will remove stop words and return a list of list of words
+def remove_stopwords(corpus):
+    no_stopwords = [w for w in corpus.split() if not w in stop_words["en"]]
+    return "".join(no_stopwords)
+
+# reduces each word to its stem work like, dogs to dog
+def stemming(corpus):
+    if not inplace: self = self.copy()
+    corpus = formating([[stemmer.stem(word) for word in each.split()] for each in corpus])
+    return self
+
+# gets the root word for each word
+def lemming(corpus):
+    if not inplace: self = self.copy()
+    corpus = formating([[lemmatizer.lemmatize(word) for word in each.split()] for each in corpus])
+    return self
