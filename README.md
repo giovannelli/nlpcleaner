@@ -11,5 +11,6 @@ nc.clean("Your text")
 ## Tests
 
 ```
+pip install .
 python setup.py test
 ```

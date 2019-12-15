@@ -63,15 +63,13 @@ def strip_all(corpus, x='.\n'):
 
 # removes numbers detected anywhere in the data
 def remove_numbers(corpus):
-    no_numbers = re.sub(r'[0-9]+','',(each)) for each in corpus
-    print("Siamo nel no")
-    print(no_numbers)
+    no_numbers = [re.sub(r'[0-9]+','',(each)) for each in corpus]
     return "".join(no_numbers).strip(' ')
 
 # removes punctuations detected anywhere in the data
 def remove_symbols(corpus):
     no_symbols = [re.sub(r'[^\w\s]','',each) for each in corpus]
-    return "".join(no_symbols)
+    return "".join(no_symbols).strip(' ')
 
 # it will remove stop words and return a list of list of words
 def remove_stopwords(corpus):

@@ -5,10 +5,10 @@ import pytest
 import nlpcleaner as nc
 
 def test_clean_all():
-    assert nc.clean_all("this is a test") == "test"
+    assert nc.clean_all("this is a test") == "this is a test"
 
 def test_strip_all():
-    assert nc.strip_all("this is a test") == "test"
+    assert nc.strip_all("this is a test\n") == "this is a test"
 
 def test_lower_all():
     assert nc.lower_all("THIS IS A TEST") == "this is a test"
@@ -17,7 +17,7 @@ def test_remove_numbers():
     assert nc.remove_numbers("numbers 1 2 3 4 5 6 7 8 9 42") == "numbers"
 
 def test_remove_symbols():
-    assert nc.remove_stopwords("this is a test") == "test"
+    assert nc.remove_symbols("this is a t風est @#$%") == "this is a t風est"
 
 def test_remove_stopwords():
     assert nc.remove_stopwords("this is a test") == "test"
