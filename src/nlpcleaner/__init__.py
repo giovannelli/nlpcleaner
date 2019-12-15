@@ -40,27 +40,33 @@ stop_words['tr'] = set(stopwords.words('turkish'))
 stemmer = SnowballStemmer('english')
 lemmatizer = WordNetLemmatizer()
 
-
-#removes all the blank line from the text file
-#returns list
-def clear_blank_lines(corpus):
-    return list(filter(str.strip,[each.rstrip() for each in corpus]))
-
-# it removes ".\n" from every element by default
-# can be used to strip by second argument
-def strip_all(corpus, x='.\n'):
-    stripped = [re.sub(r'\s+',' ',each.strip(x)) for each in corpus]
-    return "".join(stripped)
+# Cleanup all
+def clean_all(corpus):
+    corpus = lower_all(corpus)
+    return corpus
 
 # converts each character to lowercase
 def lower_all(corpus):
     lowered = [each.lower() for each in corpus]
     return "".join(lowered)
 
+# removes all the blank line from the text file
+# returns list
+def clear_blank_lines(corpus):
+    return list(filter(str.strip,[each.rstrip() for each in corpus]))
+
+# it removes ".\n" from every element by default
+# can be used to strip by second argument
+def strip_all(corpus, x='.\n'):
+    stripped = [re.sub(r'\s+',' ', each.strip(x)) for each in corpus]
+    return "".join(stripped)
+
 # removes numbers detected anywhere in the data
 def remove_numbers(corpus):
-    no_numbers = [re.sub(r'[0-9]+', '',(each)) for each in corpus]
-    return "".join(no_numbers)
+    no_numbers = re.sub(r'[0-9]+','',(each)) for each in corpus
+    print("Siamo nel no")
+    print(no_numbers)
+    return "".join(no_numbers).strip(' ')
 
 # removes punctuations detected anywhere in the data
 def remove_symbols(corpus):
@@ -74,12 +80,10 @@ def remove_stopwords(corpus):
 
 # reduces each word to its stem work like, dogs to dog
 def stemming(corpus):
-    if not inplace: self = self.copy()
-    corpus = formating([[stemmer.stem(word) for word in each.split()] for each in corpus])
-    return self
+    corpus = [[stemmer.stem(word) for word in each.split()] for each in corpus]
+    return " ".join(corpus)
 
 # gets the root word for each word
 def lemming(corpus):
-    if not inplace: self = self.copy()
-    corpus = formating([[lemmatizer.lemmatize(word) for word in each.split()] for each in corpus])
-    return self
+    corpus = [[lemmatizer.lemmatize(word) for word in each.split()] for each in corpus]
+    return " ".join(corpus)
