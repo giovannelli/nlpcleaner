@@ -1,9 +1,11 @@
-# Nlpcleaner
+# Nlpcleaner [![Build Status](https://travis-ci.org/giovannelli/nlpcleaner.svg?branch=master)](https://travis-ci.org/giovannelli/nlpcleaner)
+
 Clean and prepare text for modeling with machine learning.
 - lower all
 - strip all
 - remove numbers
 - remove symbols
+- remove url
 - remove stopwords by detected language
 - lemming or stemming
 
