@@ -1,3 +1,0 @@
-regex
-nltk>=3.4.5
-fasttext>=0.9.1
