@@ -5,7 +5,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(name='nlpcleaner',
-      version='0.1.4',
+      version='0.1.5',
       description='Clean and prepare text for modeling with machine learning',
       long_description=long_description,
       long_description_content_type='text/markdown',
@@ -23,4 +23,18 @@ setup(name='nlpcleaner',
       ],
       setup_requires=['pytest-runner'],
       tests_require=['pytest'],
-      zip_safe=False)
+      zip_safe=False,
+      classifiers=[
+        # See: https://pypi.python.org/pypi?:action=list_classifiers
+        'Development Status :: 5 - Production/Stable',
+        'Intended Audience :: Developers',
+        'Intended Audience :: Information Technology',
+        'License :: MIT :: '
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7'
+    ])
