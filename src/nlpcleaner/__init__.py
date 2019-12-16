@@ -54,6 +54,7 @@ class Text:
       cleaned = self.__lower_all()\
                     .__clear_blank_lines()\
                     .__strip_all()\
+                    .__remove_urls()\
                     .__remove_numbers()\
                     .__remove_symbols()\
                     .__remove_stopwords()\
@@ -83,6 +84,10 @@ class Text:
 
     def remove_symbols(self):
         return self.__remove_symbols()\
+                   .__formatting().corpus
+
+    def remove_urls(self):
+        return self.__remove_urls()\
                    .__formatting().corpus
 
     def remove_stopwords(self):
@@ -123,9 +128,14 @@ class Text:
         self.corpus = re.sub(r'[^\w\s]|_',' ',self.corpus)
         return self
 
-    # it will remove stop words and return a list of list of words
+    # removes url
     def __remove_stopwords(self):
         self.corpus = ' '.join([w for w in self.corpus.split() if not w in stop_words[self.language]])
+        return self
+
+    # removes stop words and return a list of list of words
+    def __remove_urls(self):
+        self.corpus = re.sub(r'\b(?:(?:https?|ftp)://)?\w[\w-]*(?:\.[\w-]+)+\S*', ' ', self.corpus)
         return self
 
     # apply lemming if content is in english else stemming

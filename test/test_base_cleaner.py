@@ -4,10 +4,6 @@ import pytest
 
 from nlpcleaner import Text
 
-def test_clean_all():
-    txt = "MANY dogs enjoy tug and chew toys and playing 'hide and seek' with you outdoors"
-    assert Text(txt).clean() == "many dog enjoy tug chew toy playing hide seek outdoors"
-
 def test_clear_blank_lines():
     txt = "first line\r\n\r\nsecond line"
     assert Text(txt).clear_blank_lines() == "first line second line"
@@ -27,6 +23,10 @@ def test_remove_numbers():
 def test_remove_symbols():
     txt = "this is a t風est `~!@#$%^&*()_|+\-=?;:'\",.<>{}[]/"
     assert Text(txt).remove_symbols() == "this is a t風est"
+
+def test_remove_urls():
+    txt = "this is a test https://www.test.it http://www.test.it ftp://test.it"
+    assert Text(txt).remove_urls() == "this is a test"
 
 def test_remove_stopwords():
     txt = "this is a test"
