@@ -6,59 +6,48 @@ from nltk.stem import SnowballStemmer
 from nltk.stem import WordNetLemmatizer
 import fasttext # to detect language
 
-# Stemmer:
-# Danish
-# Dutch
-# English
-# Finnish
-# French
-# German
-# Hungarian
-# Italian
-# Norwegian
-# Porter
-# Portuguese
-# Romanian
-# Russian
-# Spanish
-# Swedish
-
 # Set nltk folder
 nltk.data.path.append(os.getcwd() + "/src/data/nltk")
 # Load languages models
-languages_model = fasttext.load_model(os.getcwd() + "/src/data/fasttext/lid.176.ftz")
+lang_model = fasttext.load_model(os.getcwd() + "/src/data/fasttext/lid.176.ftz")
 
-stop_words = {}
-stop_words['ar'] = set(stopwords.words('arabic'))
-stop_words['az'] = set(stopwords.words('azerbaijani'))
-stop_words['da'] = set(stopwords.words('danish'))
-stop_words['nl'] = set(stopwords.words('dutch'))
-stop_words['en'] = set(stopwords.words('english'))
-stop_words['fi'] = set(stopwords.words('finnish'))
-stop_words['fr'] = set(stopwords.words('french'))
-stop_words['de'] = set(stopwords.words('german'))
-stop_words['el'] = set(stopwords.words('greek'))
-stop_words['hu'] = set(stopwords.words('hungarian'))
-stop_words['id'] = set(stopwords.words('indonesian'))
-stop_words['it'] = set(stopwords.words('italian'))
-stop_words['kk'] = set(stopwords.words('kazakh'))
-stop_words['ne'] = set(stopwords.words('nepali'))
-stop_words['nn'] = set(stopwords.words('norwegian'))
-stop_words['pt'] = set(stopwords.words('portuguese'))
-stop_words['ro'] = set(stopwords.words('romanian'))
-stop_words['ru'] = set(stopwords.words('russian'))
-stop_words['sl'] = set(stopwords.words('slovene'))
-stop_words['es'] = set(stopwords.words('spanish'))
-stop_words['sv'] = set(stopwords.words('swedish'))
-stop_words['tg'] = set(stopwords.words('tajik'))
-stop_words['tr'] = set(stopwords.words('turkish'))
+supported_lang = { 'ar': { 'name': 'arabic', 'stemmer': False, 'stopwords': True },
+                   'az': { 'name': 'azerbaijani', 'stemmer': False, 'stopwords': True },
+                   'da': { 'name': 'danish', 'stemmer': True, 'stopwords': True },
+                   'nl': { 'name': 'dutch', 'stemmer': True, 'stopwords': True },
+                   'en': { 'name': 'english', 'stemmer': True, 'stopwords': True },
+                   'fi': { 'name': 'finnish', 'stemmer': True, 'stopwords': True },
+                   'fr': { 'name': 'french', 'stemmer': True, 'stopwords': True },
+                   'de': { 'name': 'german', 'stemmer': True, 'stopwords': True },
+                   'el': { 'name': 'greek', 'stemmer': False, 'stopwords': True },
+                   'hu': { 'name': 'hungarian', 'stemmer': True, 'stopwords': True},
+                   'id': { 'name': 'indonesian', 'stemmer': False, 'stopwords': True },
+                   'it': { 'name': 'italian', 'stemmer': True, 'stopwords': True },
+                   'kk': { 'name': 'kazakh', 'stemmer': False, 'stopwords': True },
+                   'ne': { 'name': 'nepali', 'stemmer': False, 'stopwords': True },
+                   'nn': { 'name': 'norwegian', 'stemmer': True, 'stopwords': True },
+                   'pt': { 'name': 'portuguese', 'stemmer': True, 'stopwords': True },
+                   'ro': { 'name': 'romanian', 'stemmer': True, 'stopwords': True },
+                   'ru': { 'name': 'russian', 'stemmer': True, 'stopwords': True },
+                   'sl': { 'name': 'slovene', 'stemmer': False, 'stopwords': True },
+                   'es': { 'name': 'spanish', 'stemmer': True, 'stopwords': True },
+                   'sv': { 'name': 'swedish', 'stemmer': True, 'stopwords': True },
+                   'tg': { 'name': 'tajik', 'stemmer': False, 'stopwords': True },
+                   'tr': { 'name': 'turkish', 'stemmer': False, 'stopwords': True } }
 
-stemmer = SnowballStemmer('english')
 lemmatizer = WordNetLemmatizer()
+stop_words = {}
+stemmers = {}
+
+for key in supported_lang:
+    if supported_lang[key]['stopwords'] == True: stop_words[key] =  set(stopwords.words(supported_lang[key]['name']))
+    if supported_lang[key]['stemmer'] == True: stemmers[key] = SnowballStemmer(supported_lang[key]['name'])
 
 class Text:
     def __init__(self, corpus):
       self.corpus = corpus
+      detected_language = lang_model.predict(re.sub(r'\n', ' ', self.corpus))[0][0]
+      self.language = re.sub(r'__label__', '', detected_language)
 
     def clean(self):
       cleaned = self.__lower_all()\
@@ -67,8 +56,7 @@ class Text:
                     .__remove_numbers()\
                     .__remove_symbols()\
                     .__remove_stopwords()\
-                    .__stemming()\
-                    .__lemming()\
+                    .__lemming_or_stemming()\
                     .__formatting().corpus
       return cleaned
 
@@ -131,20 +119,25 @@ class Text:
 
     # removes punctuations detected anywhere in the data
     def __remove_symbols(self):
-        self.corpus = re.sub(r'[^\w\s]','',self.corpus)
+        self.corpus = re.sub(r'[^\w\s]|_',' ',self.corpus)
         return self
 
     # it will remove stop words and return a list of list of words
     def __remove_stopwords(self):
-        self.corpus = ' '.join([w for w in self.corpus.split() if not w in stop_words["en"]])
+        self.corpus = ' '.join([w for w in self.corpus.split() if not w in stop_words[self.language]])
         return self
 
+    # apply lemming if content is in english else stemming
+    def __lemming_or_stemming(self):
+        if self.language == 'en':
+            self.lemming()
+        return self
     # reduces each word to its stem work like, dogs to dog
     def __stemming(self):
         words = self.tokenized()
         stem_sentence=[]
         for word in words:
-            stem_sentence.append(stemmer.stem(word))
+            stem_sentence.append(stemmers[self.language].stem(word))
             stem_sentence.append(' ')
         self.corpus = ''.join(stem_sentence)
         return self

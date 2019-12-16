@@ -4,8 +4,8 @@ Clean and prepare text for modeling with machine learning.
 ## Usage
 
 ```
-import nlpcleaner as nc
-nc.clean("Your text")
+from nlpcleaner import Text
+Text(txt).clean()
 ```
 
 ## Tests

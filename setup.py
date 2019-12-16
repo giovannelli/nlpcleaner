@@ -12,8 +12,7 @@ setup(name='nlpcleaner',
       install_requires=[
           'regex',
           'nltk>=3.4.5',
-          'fasttext>=0.9.1',
-          'pycountry>=19.8.18'
+          'fasttext>=0.9.1'
       ],
       setup_requires=['pytest-runner'],
       tests_require=['pytest'],

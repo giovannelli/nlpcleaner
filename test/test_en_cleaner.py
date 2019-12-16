@@ -5,8 +5,8 @@ import pytest
 from nlpcleaner import Text
 
 def test_clean_all():
-    txt = "dogs playing this      is a test "
-    assert Text(txt).clean() == "dog play test"
+    txt = "MANY dogs enjoy tug and chew toys and playing 'hide and seek' with you outdoors"
+    assert Text(txt).clean() == "many dog enjoy tug chew toy playing hide seek outdoors"
 
 def test_clear_blank_lines():
     txt = "first line\r\n\r\nsecond line"
@@ -25,7 +25,7 @@ def test_remove_numbers():
     assert Text(txt).remove_numbers() == "numbers"
 
 def test_remove_symbols():
-    txt = "this is a t風est @#$%"
+    txt = "this is a t風est `~!@#$%^&*()_|+\-=?;:'\",.<>{}[]/"
     assert Text(txt).remove_symbols() == "this is a t風est"
 
 def test_remove_stopwords():
@@ -33,9 +33,9 @@ def test_remove_stopwords():
     assert Text(txt).remove_stopwords() == "test"
 
 def test_stemming():
-    txt = "this is a test"
-    assert Text(txt).stemming() == "this is a test"
+    txt = "many dogs enjoy tug and chew toys and playing 'hide and seek' with you outdoors"
+    assert Text(txt).stemming() == "mani dog enjoy tug and chew toy and play hide and seek with you outdoor"
 
 def test_lemming():
-    txt = "this is a test"
-    assert Text(txt).lemming() == "this is a test"
+    txt = "many dogs enjoy tug and chew toys and playing 'hide and seek' with you outdoors"
+    assert Text(txt).lemming() == "many dog enjoy tug and chew toy and playing 'hide and seek' with you outdoors"
