@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='nlpcleaner',
-      version='0.1.0',
+      version='0.1.1',
       description='Clean and prepare text for modeling with machine learning',
       url='https://github.com/giovannelli/nlpcleaner',
       author='Duccio Giovannelli',
