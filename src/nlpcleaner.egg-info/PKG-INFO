@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: nlpcleaner
-Version: 0.1.3
+Version: 0.1.4
 Summary: Clean and prepare text for modeling with machine learning
 Home-page: https://github.com/giovannelli/nlpcleaner
 Author: Duccio Giovannelli
