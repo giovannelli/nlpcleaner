@@ -6,17 +6,11 @@ from nltk.stem import SnowballStemmer
 from nltk.stem import WordNetLemmatizer
 import fasttext # to detect language
 
-try:
-    from pkg_resources import resource_filename
-except ImportError:
-    def resource_filename(package_or_requirement, resource_name):
-        return os.path.join(os.path.dirname(__file__), resource_name)
-
 module_path = os.path.dirname(__file__)
 # Set nltk folder
-nltk.data.path.append(resource_filename('nlpcleaner', 'data/nltk'))
+nltk.data.path.append(module_path + "/data/nltk")
 # Load languages models
-lang_model = fasttext.load_model(resource_filename('nlpcleaner', 'data/fasttext/lid.176.ftz'))
+lang_model = fasttext.load_model(module_path + "/data/fasttext/lid.176.ftz")
 
 supported_lang = { 'ar': { 'name': 'arabic', 'stemmer': False, 'stopwords': True },
                    'az': { 'name': 'azerbaijani', 'stemmer': False, 'stopwords': True },
