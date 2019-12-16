@@ -2,28 +2,40 @@
 
 import pytest
 
-import nlpcleaner as nc
+from nlpcleaner import Text
 
 def test_clean_all():
-    assert nc.clean_all("this is a test") == "this is a test"
+    txt = "dogs playing this      is a test "
+    assert Text(txt).clean() == "dog play test"
+
+def test_clear_blank_lines():
+    txt = "first line\r\n\r\nsecond line"
+    assert Text(txt).clear_blank_lines() == "first line second line"
 
 def test_strip_all():
-    assert nc.strip_all("this is a test\n") == "this is a test"
+    txt = "this is a test\n"
+    assert Text(txt).strip_all() == "this is a test"
 
 def test_lower_all():
-    assert nc.lower_all("THIS IS A TEST") == "this is a test"
+    txt = "THIS IS A TEST"
+    assert Text(txt).lower_all() == "this is a test"
 
 def test_remove_numbers():
-    assert nc.remove_numbers("numbers 1 2 3 4 5 6 7 8 9 42") == "numbers"
+    txt = "numbers 1 2 3 4 5 6 7 8 9 42"
+    assert Text(txt).remove_numbers() == "numbers"
 
 def test_remove_symbols():
-    assert nc.remove_symbols("this is a t風est @#$%") == "this is a t風est"
+    txt = "this is a t風est @#$%"
+    assert Text(txt).remove_symbols() == "this is a t風est"
 
 def test_remove_stopwords():
-    assert nc.remove_stopwords("this is a test") == "test"
+    txt = "this is a test"
+    assert Text(txt).remove_stopwords() == "test"
 
 def test_stemming():
-    assert nc.remove_stopwords("this is a test") == "test"
+    txt = "this is a test"
+    assert Text(txt).stemming() == "this is a test"
 
 def test_lemming():
-    assert nc.remove_stopwords("this is a test") == "test"
+    txt = "this is a test"
+    assert Text(txt).lemming() == "this is a test"

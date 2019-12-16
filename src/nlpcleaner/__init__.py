@@ -4,8 +4,24 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.stem import SnowballStemmer
 from nltk.stem import WordNetLemmatizer
-import fasttext
-from pycountry import languages
+import fasttext # to detect language
+
+# Stemmer:
+# Danish
+# Dutch
+# English
+# Finnish
+# French
+# German
+# Hungarian
+# Italian
+# Norwegian
+# Porter
+# Portuguese
+# Romanian
+# Russian
+# Spanish
+# Swedish
 
 # Set nltk folder
 nltk.data.path.append(os.getcwd() + "/src/data/nltk")
@@ -40,48 +56,111 @@ stop_words['tr'] = set(stopwords.words('turkish'))
 stemmer = SnowballStemmer('english')
 lemmatizer = WordNetLemmatizer()
 
-# Cleanup all
-def clean_all(corpus):
-    corpus = lower_all(corpus)
-    return corpus
+class Text:
+    def __init__(self, corpus):
+      self.corpus = corpus
 
-# converts each character to lowercase
-def lower_all(corpus):
-    lowered = [each.lower() for each in corpus]
-    return "".join(lowered)
+    def clean(self):
+      cleaned = self.__lower_all()\
+                    .__clear_blank_lines()\
+                    .__strip_all()\
+                    .__remove_numbers()\
+                    .__remove_symbols()\
+                    .__remove_stopwords()\
+                    .__stemming()\
+                    .__lemming()\
+                    .__formatting().corpus
+      return cleaned
 
-# removes all the blank line from the text file
-# returns list
-def clear_blank_lines(corpus):
-    return list(filter(str.strip,[each.rstrip() for each in corpus]))
+    def tokenized(self):
+        words = filter(lambda x: len(x)>0, self.corpus.split(' '))
+        return words
 
-# it removes ".\n" from every element by default
-# can be used to strip by second argument
-def strip_all(corpus, x='.\n'):
-    stripped = [re.sub(r'\s+',' ', each.strip(x)) for each in corpus]
-    return "".join(stripped)
+    def lower_all(self):
+        return self.__lower_all()\
+                   .__formatting().corpus
 
-# removes numbers detected anywhere in the data
-def remove_numbers(corpus):
-    no_numbers = [re.sub(r'[0-9]+','',(each)) for each in corpus]
-    return "".join(no_numbers).strip(' ')
+    def clear_blank_lines(self):
+        return self.__clear_blank_lines()\
+                   .__formatting().corpus
 
-# removes punctuations detected anywhere in the data
-def remove_symbols(corpus):
-    no_symbols = [re.sub(r'[^\w\s]','',each) for each in corpus]
-    return "".join(no_symbols).strip(' ')
+    def strip_all(self):
+        return self.__strip_all()\
+                   .__formatting().corpus
 
-# it will remove stop words and return a list of list of words
-def remove_stopwords(corpus):
-    no_stopwords = [w for w in corpus.split() if not w in stop_words["en"]]
-    return "".join(no_stopwords)
+    def remove_numbers(self):
+        return self.__remove_numbers()\
+                   .__formatting().corpus
 
-# reduces each word to its stem work like, dogs to dog
-def stemming(corpus):
-    corpus = [[stemmer.stem(word) for word in each.split()] for each in corpus]
-    return " ".join(corpus)
+    def remove_symbols(self):
+        return self.__remove_symbols()\
+                   .__formatting().corpus
 
-# gets the root word for each word
-def lemming(corpus):
-    corpus = [[lemmatizer.lemmatize(word) for word in each.split()] for each in corpus]
-    return " ".join(corpus)
+    def remove_stopwords(self):
+        return self.__remove_stopwords()\
+                   .__formatting().corpus
+
+    def stemming(self):
+        return self.__stemming()\
+                   .__formatting().corpus
+
+    def lemming(self):
+        return self.__lemming()\
+                   .__formatting().corpus
+
+    # converts each character to lowercase
+    def __lower_all(self):
+        self.corpus = ''.join([each.lower() for each in self.corpus])
+        return self
+
+    # removes all the blank line from the text file
+    def __clear_blank_lines(self):
+        self.corpus = re.sub(r'\r\n', ' ', self.corpus)
+        return self
+
+    # it removes ".\n" from every element by default
+    # can be used to strip by second argument
+    def __strip_all(self):
+        self.corpus = re.sub(r'\n', ' ', self.corpus)
+        return self
+
+    # removes numbers detected anywhere in the data
+    def __remove_numbers(self):
+        self.corpus = re.sub(r'[0-9]+',' ',self.corpus)
+        return self
+
+    # removes punctuations detected anywhere in the data
+    def __remove_symbols(self):
+        self.corpus = re.sub(r'[^\w\s]','',self.corpus)
+        return self
+
+    # it will remove stop words and return a list of list of words
+    def __remove_stopwords(self):
+        self.corpus = ' '.join([w for w in self.corpus.split() if not w in stop_words["en"]])
+        return self
+
+    # reduces each word to its stem work like, dogs to dog
+    def __stemming(self):
+        words = self.tokenized()
+        stem_sentence=[]
+        for word in words:
+            stem_sentence.append(stemmer.stem(word))
+            stem_sentence.append(' ')
+        self.corpus = ''.join(stem_sentence)
+        return self
+
+    # gets the root word for each word
+    def __lemming(self):
+        words = self.tokenized()
+        lem_sentence=[]
+        for word in words:
+            lem_sentence.append(lemmatizer.lemmatize(word))
+            lem_sentence.append(' ')
+        self.corpus = ''.join(lem_sentence)
+        return self
+
+    # apply common format to all responses
+    # - remove double spaces
+    def __formatting(self):
+        self.corpus = re.sub(r'\s\s+',' ',self.corpus).strip()
+        return self
