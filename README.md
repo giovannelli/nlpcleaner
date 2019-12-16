@@ -1,6 +1,6 @@
 # Nlpcleaner
 Clean and prepare text for modeling with machine learning.
-- lower al
+- lower all
 - strip all
 - remove numbers
 - remove symbols

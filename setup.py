@@ -1,11 +1,11 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 from os import path
 this_directory = path.abspath(path.dirname(__file__))
 with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(name='nlpcleaner',
-      version='0.1.2',
+      version='0.1.3',
       description='Clean and prepare text for modeling with machine learning',
       long_description=long_description,
       long_description_content_type='text/markdown',
@@ -13,8 +13,9 @@ setup(name='nlpcleaner',
       author='Duccio Giovannelli',
       author_email='giovannelli@extendi.it',
       license='MIT',
-      packages=['nlpcleaner'],
-      package_dir={'nlpcleaner': 'src/nlpcleaner'},
+      packages=find_packages('src'),
+      package_dir={'': 'src'},
+      include_package_data=True,
       install_requires=[
           'regex',
           'nltk>=3.4.5',
