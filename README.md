@@ -14,3 +14,11 @@ Text(txt).clean()
 pip install .
 python setup.py test
 ```
+
+## Push on PyPi
+
+```
+python setup.py sdist
+pip install twine
+twine upload dist/*
+```
