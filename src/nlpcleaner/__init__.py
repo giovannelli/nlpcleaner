@@ -143,6 +143,7 @@ class Text:
         if self.language == 'en':
             self.lemming()
         return self
+
     # reduces each word to its stem work like, dogs to dog
     def __stemming(self):
         words = self.tokenized()

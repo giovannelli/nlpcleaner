@@ -30,3 +30,7 @@ python setup.py sdist
 pip install twine
 twine upload dist/*
 ```
+
+## TODO
+* Add tests to cover different cases and languages;
+* check performances
