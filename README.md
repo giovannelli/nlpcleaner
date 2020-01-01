@@ -13,8 +13,8 @@ Clean and prepare text for modeling with machine learning.
 ## Usage
 
 ```
-from nlpcleaner import Text
-Text(txt).clean()
+from nlpcleaner import TextCleaner
+TextCleaner(txt).clean()
 ```
 
 ## Tests

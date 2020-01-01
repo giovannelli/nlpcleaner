@@ -5,8 +5,11 @@ from nltk.corpus import stopwords
 from nltk.stem import SnowballStemmer
 from nltk.stem import WordNetLemmatizer
 import fasttext # to detect language
+import logging
 
+log = logging.getLogger(__name__)
 module_path = os.path.dirname(__file__)
+
 # Set nltk folder
 nltk.data.path.append(module_path + "/data/nltk")
 # Load languages models
@@ -41,14 +44,15 @@ stop_words = {}
 stemmers = {}
 
 for key in supported_lang:
-    if supported_lang[key]['stopwords'] == True: stop_words[key] =  set(stopwords.words(supported_lang[key]['name']))
+    if supported_lang[key]['stopwords'] == True: stop_words[key] = set(stopwords.words(supported_lang[key]['name']))
     if supported_lang[key]['stemmer'] == True: stemmers[key] = SnowballStemmer(supported_lang[key]['name'])
 
-class Text:
+class TextCleaner:
     def __init__(self, corpus):
       self.corpus = corpus
       detected_language = lang_model.predict(re.sub(r'\n', ' ', self.corpus))[0][0]
       self.language = re.sub(r'__label__', '', detected_language)
+      log.debug("Detected language: %s" % self.language)
 
     def clean(self):
       cleaned = self.__lower_all()\
@@ -138,12 +142,17 @@ class Text:
         self.corpus = re.sub(r'[^\w\s]|_',' ',self.corpus)
         return self
 
-    # removes url
+    # removes stop words if detected language is supported
     def __remove_stopwords(self):
-        self.corpus = ' '.join([w for w in self.corpus.split() if not w in stop_words[self.language]])
+        log.debug(supported_lang.get(self.language))
+        if type(supported_lang.get(self.language)) != type(None):
+            log.debug("stopwords present for %s" % self.language)
+            self.corpus = ' '.join([w for w in self.corpus.split() if not w in stop_words[self.language]])
+        else:
+            log.debug("stopwords not present for %s" % self.language)
         return self
 
-    # removes stop words and return a list of list of words
+    # removes urls and return a list of list of words
     def __remove_urls(self):
         self.corpus = re.sub(r'\b(?:(?:https?|ftp)://)?\w[\w-]*(?:\.[\w-]+)+\S*', ' ', self.corpus)
         return self
@@ -158,20 +167,25 @@ class Text:
         self.corpus = re.sub(r'<script(.*)</script>', '', self.corpus)
         return self
 
-    # apply lemming if content is in english else stemming
+    # apply lemming if content is in english otherwise apply stemming
     def __lemming_or_stemming(self):
         if self.language == 'en':
             self.lemming()
+        else:
+            log.debug("lemming is not available for %s but we don't apply stemming!" % self.language)
         return self
 
     # reduces each word to its stem work like, dogs to dog
     def __stemming(self):
-        words = self.tokenized()
-        stem_sentence=[]
-        for word in words:
-            stem_sentence.append(stemmers[self.language].stem(word))
-            stem_sentence.append(' ')
-        self.corpus = ''.join(stem_sentence)
+        if supported_lang.get(self.language) != None and supported_lang.get(self.language)['stemmer']:
+            words = self.tokenized()
+            stem_sentence=[]
+            for word in words:
+                stem_sentence.append(stemmers[self.language].stem(word))
+                stem_sentence.append(' ')
+            self.corpus = ''.join(stem_sentence)
+        else:
+            log.debug("stemming not available for %s" % self.language)
         return self
 
     # gets the root word for each word
