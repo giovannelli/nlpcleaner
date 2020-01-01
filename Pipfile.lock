@@ -1,0 +1,24 @@
+{
+    "_meta": {
+        "hash": {
+            "sha256": "b8a9e9b2aac4264367c4d95916e893311436c8788f87379fd51596487fac137d"
+        },
+        "pipfile-spec": 6,
+        "requires": {
+            "python_version": "3.7"
+        },
+        "sources": [
+            {
+                "name": "pypi",
+                "url": "https://pypi.org/simple",
+                "verify_ssl": true
+            }
+        ]
+    },
+    "default": {
+        "nlpcleaner": {
+            "path": "."
+        }
+    },
+    "develop": {}
+}

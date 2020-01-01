@@ -6,6 +6,7 @@ Clean and prepare text for modeling with machine learning.
 - remove numbers
 - remove symbols
 - remove url
+- strip html tags
 - remove stopwords by detected language
 - lemming or stemming
 
@@ -19,7 +20,7 @@ Text(txt).clean()
 ## Tests
 
 ```
-pip install .
+pipenv install .
 python setup.py test
 ```
 

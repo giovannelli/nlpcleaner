@@ -55,6 +55,8 @@ class Text:
                     .__clear_blank_lines()\
                     .__strip_all()\
                     .__remove_urls()\
+                    .__strip_html_tags()\
+                    .__remove_script()\
                     .__remove_numbers()\
                     .__remove_symbols()\
                     .__remove_stopwords()\
@@ -88,6 +90,14 @@ class Text:
 
     def remove_urls(self):
         return self.__remove_urls()\
+                   .__formatting().corpus
+
+    def strip_html_tags(self):
+        return self.__strip_html_tags()\
+                   .__formatting().corpus
+
+    def remove_script(self):
+        return self.__remove_script()\
                    .__formatting().corpus
 
     def remove_stopwords(self):
@@ -136,6 +146,16 @@ class Text:
     # removes stop words and return a list of list of words
     def __remove_urls(self):
         self.corpus = re.sub(r'\b(?:(?:https?|ftp)://)?\w[\w-]*(?:\.[\w-]+)+\S*', ' ', self.corpus)
+        return self
+
+    # strip html tags
+    def __strip_html_tags(self):
+        self.corpus = re.sub(r'<[^>]+>', ' ', self.corpus)
+        return self
+
+    # removes script blocks
+    def __remove_script(self):
+        self.corpus = re.sub(r'<script(.*)</script>', '', self.corpus)
         return self
 
     # apply lemming if content is in english else stemming
