@@ -13,7 +13,7 @@ def data_files():
     return files
 
 setup(name='nlpcleaner',
-      version='0.2.0',
+      version='0.2.1',
       description='Clean and prepare text for modeling with machine learning',
       long_description=long_description,
       long_description_content_type='text/markdown',
