@@ -36,9 +36,21 @@ def test_remove_script():
     txt = "<script>alert('test')</script><p>test</p>"
     assert TextCleaner(txt).remove_script() == "<p>test</p>"
 
-def test_remove_stopwords():
+def test_remove_stopwords_guessing_language():
     txt = "this is a test"
     assert TextCleaner(txt).remove_stopwords() == "test"
+
+def test_remove_stopwords_with_passed_language():
+    txt = "this is a test"
+    assert TextCleaner(txt, 'en').remove_stopwords() == "test"
+
+def test_remove_stopwords_with_not_supported_passed_language():
+    txt = "this is a test"
+    assert TextCleaner(txt, 'lang_not_supported').remove_stopwords() == "this is a test"
+
+def test_remove_stopwords_with_wrong_passed_language():
+    txt = "this is a test"
+    assert TextCleaner(txt, 'it').remove_stopwords() == "this is test"
 
 def test_remove_stopwords_punjabi_language_supported():
     txt = "ਖੂਹ ਵਿਚ ਚੰਦਰਮਾ"

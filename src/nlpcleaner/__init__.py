@@ -4,7 +4,7 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.stem import SnowballStemmer
 from nltk.stem import WordNetLemmatizer
-import fasttext # to detect language
+import cld3
 import logging
 
 log = logging.getLogger(__name__)
@@ -12,8 +12,6 @@ module_path = os.path.dirname(__file__)
 
 # Set nltk folder
 nltk.data.path.append(module_path + "/data/nltk")
-# Load languages models
-lang_model = fasttext.load_model(module_path + "/data/fasttext/lid.176.ftz")
 
 supported_lang = { 'ar': { 'name': 'arabic', 'stemmer': False, 'stopwords': True },
                    'az': { 'name': 'azerbaijani', 'stemmer': False, 'stopwords': True },
@@ -48,11 +46,13 @@ for key in supported_lang:
     if supported_lang[key]['stemmer'] == True: stemmers[key] = SnowballStemmer(supported_lang[key]['name'])
 
 class TextCleaner:
-    def __init__(self, corpus):
+    def __init__(self, corpus, language = None):
       self.corpus = corpus
-      detected_language = lang_model.predict(re.sub(r'\n', ' ', self.corpus))[0][0]
-      self.language = re.sub(r'__label__', '', detected_language)
-      log.debug("Detected language: %s" % self.language)
+      if language is None:
+        self.language = cld3.get_language(self.corpus).language
+        log.debug("Detected language: %s" % self.language)
+      else:
+         self.language = language
 
     def clean(self):
       cleaned = self.__lower_all()\

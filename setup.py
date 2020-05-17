@@ -9,11 +9,10 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 def data_files():
     files = glob("src/nlpcleaner/data/nltk/**/**/*", recursive=True)
     files = [f for f in files if path.isfile(f)]
-    files.append('src/nlpcleaner/data/fasttext/lid.176.ftz')
     return files
 
 setup(name='nlpcleaner',
-      version='0.2.1',
+      version='0.3.0',
       description='Clean and prepare text for modeling with machine learning',
       long_description=long_description,
       long_description_content_type='text/markdown',
@@ -27,8 +26,8 @@ setup(name='nlpcleaner',
       data_files=data_files(),
       install_requires=[
           'regex',
-          'nltk>=3.4.5',
-          'fasttext>=0.9.1'
+          'nltk >= 3.5',
+          'pycld3 >= 0.2.0'
       ],
       setup_requires=['pytest-runner'],
       tests_require=['pytest'],
