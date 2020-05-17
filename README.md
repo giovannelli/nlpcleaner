@@ -7,7 +7,7 @@ Clean and prepare text for modeling with machine learning.
 - remove symbols
 - remove url
 - strip html tags
-- remove stopwords by detected language
+- remove stopwords by detected language or passed language
 - lemming or stemming
 
 ## Usage
