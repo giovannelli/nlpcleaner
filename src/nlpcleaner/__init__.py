@@ -201,5 +201,5 @@ class TextCleaner:
     # apply common format to all responses
     # - remove double spaces
     def __formatting(self):
-        self.corpus = re.sub(r'\s\s+',' ',self.corpus).strip()
+        self.corpus = re.sub(' +',' ',self.corpus).strip()
         return self
