@@ -134,12 +134,12 @@ class TextCleaner:
 
     # removes numbers detected anywhere in the data
     def __remove_numbers(self):
-        self.corpus = re.sub(r'[0-9]+',' ',self.corpus)
+        self.corpus = re.sub(r'[0-9]+',' ', self.corpus)
         return self
 
     # removes punctuations detected anywhere in the data
     def __remove_symbols(self):
-        self.corpus = re.sub(r'[^\w\s]|_',' ',self.corpus)
+        self.corpus = re.sub(r'[^\w\s]|_',' ', self.corpus)
         return self
 
     # removes stop words if detected language is supported
@@ -201,5 +201,5 @@ class TextCleaner:
     # apply common format to all responses
     # - remove double spaces
     def __formatting(self):
-        self.corpus = re.sub(' +',' ',self.corpus).strip()
+        self.corpus = re.sub(' +',' ', self.corpus).strip()
         return self
